@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simple Task Manager</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f7f9fc;
+    padding: 20px;
+    max-width: 450px;
+    margin: auto;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+
+  .task-input {
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .task-input input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 4px 0 0 4px;
+  }
+
+  .task-input button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 2px solid #28a745;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0;
+    transition: background-color 0.3s;
+  }
+
+  .task-input button:hover {
+    background-color: #218838;
+    border-color: #218838;
+  }
+
+  ul.task-list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  ul.task-list li {
+    background: white;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+  }
+
+  ul.task-list li.completed span.task-text {
+    text-decoration: line-through;
+    color: #888;
+  }
+
+  span.task-text {
+    flex-grow: 1;
+    font-size: 16px;
+    user-select: none;
+  }
+
+  button.complete-btn,
+  button.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+
+  button.complete-btn {
+    color: #28a745;
+  }
+
+  button.complete-btn:hover {
+    background-color: #d4edda;
+  }
+
+  button.delete-btn {
+    color: #dc3545;
+  }
+
+  button.delete-btn:hover {
+    background-color: #f8d7da;
+  }
+</style>
+</head>
+<body>
+
+<h1>My Tasks</h1>
+
+<div class="task-input">
+  <input id="new-task" type="text" placeholder="Add a new task..." />
+  <button id="add-task-btn">Add</button>
+</div>
+
+<ul id="task-list" class="task-list">
+  <!-- Tasks will appear here -->
+</ul>
+
+<script>
+  const taskList = document.getElementById('task-list');
+  const addTaskBtn = document.getElementById('add-task-btn');
+  const newTaskInput = document.getElementById('new-task');
+
+  // Preload example tasks
+  const initialTasks = [
+    'View a list of tasks',
+    'Add a new task',
+    'Mark a task as completed',
+    'Delete a task'
+  ];
+
+  function createTaskElement(taskText) {
+    const li = document.createElement('li');
+
+    const span = document.createElement('span');
+    span.className = 'task-text';
+    span.textContent = taskText;
+
+    const completeBtn = document.createElement('button');
+    completeBtn.className = 'complete-btn';
+    completeBtn.innerHTML = '&#10003;'; // checkmark
+    completeBtn.title = 'Mark as completed';
+
+    completeBtn.addEventListener('click', () => {
+      li.classList.toggle('completed');
+    });
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.innerHTML = '&#10005;'; // cross
+    deleteBtn.title = 'Delete task';
+
+    deleteBtn.addEventListener('click', () => {
+      taskList.removeChild(li);
+    });
+
+    li.appendChild(span);
+    li.appendChild(completeBtn);
+    li.appendChild(deleteBtn);
+
+    return li;
+  }
+
+  // Load initial tasks
+  initialTasks.forEach(task => {
+    const taskElement = createTaskElement(task);
+    taskList.appendChild(taskElement);
+  });
+
+  // Add task function
+  function addTask() {
+    const taskText = newTaskInput.value.trim();
+    if (taskText === '') {
+      alert('Please enter a task.');
+      return;
+    }
+    const taskElement = createTaskElement(taskText);
+    taskList.appendChild(taskElement);
+    newTaskInput.value = '';
+    newTaskInput.focus();
+  }
+
+  addTaskBtn.addEventListener('click', addTask);
+
+  // Also add task on pressing Enter in input
+  newTaskInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      addTask();
+    }
+  });
+</script>
+
+</body>
+</html>
